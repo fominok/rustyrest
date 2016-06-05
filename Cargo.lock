@@ -1,0 +1,4 @@
+[root]
+name = "rust-phonebook"
+version = "0.1.0"
+

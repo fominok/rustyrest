@@ -1,0 +1,6 @@
+[package]
+name = "rust-phonebook"
+version = "0.1.0"
+authors = ["Evgeny Fomin <fominok@hotmail.com>"]
+
+[dependencies]
