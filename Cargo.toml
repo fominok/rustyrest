@@ -5,3 +5,4 @@ authors = ["Evgeny Fomin <fominok@hotmail.com>"]
 
 [dependencies]
 postgres = "0.11.8"
+rust-ini = "*"
