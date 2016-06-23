@@ -1,6 +1,0 @@
-host=localhost
-port=yolo
-sslmode=disable
-dbname=postgres
-user=postgres
-pass=postgres

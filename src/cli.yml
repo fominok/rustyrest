@@ -1,0 +1,41 @@
+name: Phonebook
+version: 1.0
+about: A Rust toy project
+author: Evgeny F. <fominok@hotmail.com>
+subcommands:
+    - add:
+        about: create new record
+        args:
+            - name:
+                help: name of person
+                index: 1
+                required: true
+            - phone:
+                help: his phone
+                index: 2
+                required: true
+    - del:
+        about: delete records
+        args:
+          - ids:
+              help: ids of records to delete
+              multiple: true
+              index: 1
+              required: true
+    - edit:
+        about: edit record with id
+        args:
+          - id:
+              help: id of record to edit
+              index: 1
+              required: true
+          - phone:
+              help: new phone
+              index: 2
+              required: true
+    - show:
+        about: display all records or records with substring
+        args:
+          - substring:
+              help: find string
+              index: 1

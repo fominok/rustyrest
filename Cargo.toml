@@ -6,3 +6,7 @@ authors = ["Evgeny Fomin <fominok@hotmail.com>"]
 [dependencies]
 postgres = "0.11.8"
 rust-ini = "*"
+
+[dependencies.clap]
+version = "2"
+features = [ "suggestions", "color", "yaml" ]
