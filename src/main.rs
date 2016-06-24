@@ -1,3 +1,5 @@
+mod db;
+
 extern crate postgres;
 extern crate ini;
 
@@ -10,15 +12,6 @@ use postgres::{Connection, ConnectParams, ConnectTarget, SslMode, UserInfo};
 use std::str::FromStr;
 
 use clap::App;
-
-const HELP: &'static str = "Usage: phonebook COMMAND [ARG]...
-Commands:
-    add NAME PHONE - create new record;
-    del ID1 ID2... - delete record;
-    edit ID        - edit record;
-    show           - display all records;
-    show STRING    - display records which contain a given substring in the name;
-    help           - display this help;";
 
 struct Person {
     id: i32,
@@ -56,13 +49,25 @@ fn params<'a>() -> (ConnectParams, SslMode<'a>) {
 
 }
 
+fn init_db() -> Connection {
+    let (params, sslmode) = params();
+    let conn = Connection::connect(params, sslmode).unwrap();
+    let create_res = conn.execute("CREATE TABLE person (id SERIAL PRIMARY KEY, name VARCHAR NOT NULL, phone VARCHAR NOT NULL)",&[]);
+
+    match create_res {
+        Err(_) => (),
+        Ok(_) => println!("Creating new database")
+    };
+    conn
+}
+
 fn main() {
     let yml = load_yaml!("cli.yml");
     let m = App::from_yaml(yml).get_matches();
 
     if let Some(ref add_m) = m.subcommand_matches("add") {
-        println!("Add! {}: {}",
-                 add_m.value_of("name").unwrap(), add_m.value_of("phone").unwrap())
+        let conn = init_db();
+        db::add(&conn, add_m.value_of("name").unwrap(), add_m.value_of("phone").unwrap());
     }
 
     if let Some(ref del_m) = m.subcommand_matches("del") {
@@ -84,19 +89,7 @@ fn main() {
         }
     }
 
-    //if let Some(mode) = m.is_present("mode") {
-    //    match mode {
-    //        "fast" => println!("We're really going now!"),
-    //        "slow" => println!("Awwww, too slow :("),
-    //        _      => unreachable!()
-    //    }
-    //} else {
-    //    println!("--mode <MODE> wasn't used...");
-    //}
-    //let (params, sslmode) = params();
-    //let conn = Connection::connect(params, sslmode).unwrap();
-    ////conn.execute("CREATE TABLE person (id SERIAL PRIMARY KEY, name VARCHAR NOT NULL, data BYTEA)",&[]).unwrap();
-    //let me = Person {
+       //let me = Person {
     //    id: 0,
     //    name: "Jesus".to_string(),
     //    data: None
