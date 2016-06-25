@@ -11,7 +11,15 @@ pub fn del(conn: &::postgres::Connection, ids: &[i32]) -> ::postgres::Result<u64
     Ok(0)
 }
 
-pub fn show_all<'a>(conn: &'a::postgres::Connection) -> &'a ::postgres::Result<::postgres::rows::Rows>{
+pub fn show_all(conn: &::postgres::Connection) -> ::postgres::Result<Vec<::Person>>{
     let stmt = conn.prepare("select id, name, phone from person").unwrap();
-    &stmt.query(&[])
+    let mut result = vec![];
+    for row in &stmt.query(&[]).unwrap() {
+        result.push(::Person {
+            id: row.get(0),
+            name: row.get(1),
+            phone: row.get(2)
+        })
+    }
+    Ok(result)
 }

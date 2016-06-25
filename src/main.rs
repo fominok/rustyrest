@@ -13,9 +13,10 @@ use std::str::FromStr;
 
 use clap::App;
 
-struct Person {
+pub struct Person {
     id: i32,
-    name: String, data: Option<Vec<u8>>
+    name: String,
+    phone: String
 }
 
 fn params<'a>() -> (ConnectParams, SslMode<'a>) {
@@ -87,8 +88,8 @@ fn main() {
         if let Some(substring) = show_m.value_of("substring") {
             println!("Show! {}", substring)
         } else {
-            for row in &db::show_all(&conn).unwrap(){
-                println!("{}: {}", row.get::<usize, String>(0), row.get::<usize, String>(1));
+            for p in &db::show_all(&conn).unwrap(){
+                println!("{}: {}", p.name, p.phone);
             }
         }
     }
