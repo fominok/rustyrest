@@ -71,9 +71,10 @@ fn main() {
     }
 
     if let Some(ref del_m) = m.subcommand_matches("del") {
-        for id in del_m.values_of("ids").unwrap(){
-            println!("Del! {}", id)
-        }
+        let conn = init_db();
+        db::del(&conn, &del_m.values_of("ids").unwrap()
+                .map(|x| x.parse().unwrap())
+                .collect::<Vec<i32>>());
     }
 
     if let Some(ref edit_m) = m.subcommand_matches("edit") {
@@ -82,10 +83,13 @@ fn main() {
     }
 
     if let Some(ref show_m) = m.subcommand_matches("show") {
+        let conn = init_db();
         if let Some(substring) = show_m.value_of("substring") {
             println!("Show! {}", substring)
         } else {
-            println!("show all!")
+            for row in &db::show_all(&conn).unwrap(){
+                println!("{}: {}", row.get::<usize, String>(0), row.get::<usize, String>(1));
+            }
         }
     }
 
