@@ -86,7 +86,9 @@ fn main() {
     if let Some(ref show_m) = m.subcommand_matches("show") {
         let conn = init_db();
         if let Some(substring) = show_m.value_of("substring") {
-            println!("Show! {}", substring)
+            for p in &db::show_matching(&conn, substring).unwrap(){
+                println!("{}: {}", p.name, p.phone);
+            }
         } else {
             for p in &db::show_all(&conn).unwrap(){
                 println!("{}: {}", p.name, p.phone);

@@ -23,3 +23,16 @@ pub fn show_all(conn: &::postgres::Connection) -> ::postgres::Result<Vec<::Perso
     }
     Ok(result)
 }
+
+pub fn show_matching(conn: &::postgres::Connection, substr: &str) -> ::postgres::Result<Vec<::Person>>{
+    let stmt = conn.prepare(&format!("select id, name, phone from person where name like '%{}%'",substr)).unwrap();
+    let mut result = vec![];
+    for row in &stmt.query(&[]).unwrap() {
+        result.push(::Person {
+            id: row.get(0),
+            name: row.get(1),
+            phone: row.get(2)
+        })
+    }
+    Ok(result)
+}
